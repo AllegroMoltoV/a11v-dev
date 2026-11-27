@@ -13,6 +13,11 @@
     "owner": "AllegroMoltoV",
     "links": [
       {
+        "label": "allegromoltov.jp (Japanese)",
+        "url": "https://www.allegromoltov.jp/",
+        "lang": "ja"
+      },
+      {
         "label": "GitHub",
         "url": "https://github.com/AllegroMoltoV"
       },
@@ -591,8 +596,27 @@
       "questions": [
         "simplicity"
       ],
-      "what": "A diagnostic app for stream settings.",
-      "status": "Ended. Its diagnosis moved into a successor OBS plugin."
+      "what": "A diagnostic app for stream settings. Page in Japanese.",
+      "status": "Ended. Its diagnosis moved into a successor OBS plugin.",
+      "url": "https://www.allegromoltov.jp/products/obs-shindan-chan"
+    },
+    {
+      "name": "Kanpai Ninja",
+      "url": "https://www.allegromoltov.jp/products/kanpai-ninja",
+      "group": "product",
+      "questions": [
+        "simplicity"
+      ],
+      "what": "A browser app for sharing drink counts live while streaming. Entries are deleted after 24 hours. Page in Japanese."
+    },
+    {
+      "name": "Pianistro",
+      "url": "https://www.pianistro.jp/",
+      "group": "product",
+      "questions": [
+        "lightweight"
+      ],
+      "what": "A paid service for making a personal website, built for creators. Page in Japanese."
     }
   ]
 }
