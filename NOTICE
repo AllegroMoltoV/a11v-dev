@@ -1,0 +1,16 @@
+a11v lab (a11v.dev) site source
+
+1. Code (MIT, see LICENSE)
+   site/src/, site/test/, site/wrangler.jsonc, site/package.json, .github/
+
+2. Site content and brand assets (All rights reserved)
+   site/data/site.json   the text of the site
+   site/assets/          the a11v lab logo and favicon
+   These are not covered by the MIT license. Please do not reuse them to
+   represent another project or person.
+
+3. Third-party
+   The letterforms of the logo (site/assets/logo.svg, favicon.svg) are outlines
+   of EB Garamond Bold Italic, which is licensed under the SIL Open Font License
+   1.1 (https://openfontlicense.org/). EB Garamond is by the EB Garamond Project
+   Authors (https://github.com/octaviopardo/EBGaramond12).

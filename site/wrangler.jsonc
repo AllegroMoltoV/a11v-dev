@@ -1,0 +1,16 @@
+{
+  // a11v.dev の静的サイト。Workers の静的アセットだけで配信する (Worker のコードは持たない)。
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "a11v-dev",
+  "compatibility_date": "2026-11-27",
+  // workers.dev は使わない。a11v.dev のゾーン設定を反映せず、URL にアカウント名の一部が入るおそれがあるため。
+  "workers_dev": false,
+  "preview_urls": false,
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "404-page"
+  },
+  // カスタムドメイン。DNS のレコードと証明書は、Cloudflare が自動で作る。
+  // 削除するときは、証明書が自動では消えないため、ダッシュボードで手動で削除する。
+  "routes": [{ "pattern": "a11v.dev", "custom_domain": true }]
+}

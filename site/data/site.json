@@ -1,0 +1,598 @@
+{
+  "name": "a11v lab",
+  "origin": "https://a11v.dev",
+  "tagline": "Questions about software, explored by building it.",
+  "intro": "The software research practice of AllegroMoltoV, an individual developer.",
+  "support": {
+    "before": "Support a11v lab on ",
+    "linkText": "GitHub Sponsors",
+    "href": "https://github.com/sponsors/AllegroMoltoV",
+    "after": ", monthly or one time. It helps cover running costs and the time to maintain this work. It is optional, gives nothing in return, and does not affect how plugins are listed or checked."
+  },
+  "footer": {
+    "owner": "AllegroMoltoV",
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/AllegroMoltoV"
+      },
+      {
+        "label": "Qiita (Japanese)",
+        "url": "https://qiita.com/AllegroMoltoV",
+        "lang": "ja"
+      },
+      {
+        "label": "note (Japanese)",
+        "url": "https://note.com/allegromoltov",
+        "lang": "ja"
+      },
+      {
+        "label": "Medium",
+        "url": "https://allegromoltov.medium.com/"
+      }
+    ]
+  },
+  "questions": [
+    {
+      "id": "agent-first",
+      "title": "Agent-first Software",
+      "question": "How does software design change when AI agents are the users?",
+      "state": "Plugin Soko-kun accepts submissions only through MCP. One failure so far: an agent waited more than 6 hours on an ambiguous reply, which changed the specification. Use by third-party agents is not yet validated."
+    },
+    {
+      "id": "lightweight",
+      "title": "Lightweight Software",
+      "question": "How light can software be while keeping its value to users?",
+      "state": "The Soko-kun top page ships no JavaScript and transfers about 131 KiB. A detail page transferred about 1,351 KiB, with an LCP of 8.0 s, until an external GIF was replaced."
+    },
+    {
+      "id": "simplicity",
+      "title": "User-centered Simplicity",
+      "question": "What does simplicity mean for a user, and how does it differ from simple internals?",
+      "state": "EasySyncEditor keeps Git vocabulary out of its interface. The Soko-kun screen shows the name, purpose, supported OS and download in one view. How plugin features were selected is not yet written down."
+    },
+    {
+      "id": "sustainable",
+      "title": "Sustainable Development",
+      "question": "How should software be designed so that one person can keep running it?",
+      "state": "Soko-kun runs on a USD 5 per month plan with a daily cap on AI spending and notifications to the administrator. Human review remains. The record is 17 days, too short to say anything about continuity."
+    },
+    {
+      "id": "conventions",
+      "title": "Rethinking Conventions",
+      "question": "Is an established convention still reasonable for its purpose, and is there a better alternative?",
+      "state": "Submissions through MCP only, a zip instead of an installer, and checks on provenance and tampering instead of contents. These are results of trying, not yet framed as a research question."
+    },
+    {
+      "id": "verifiable",
+      "title": "Verifiable Development",
+      "question": "How can development be arranged so that an agent can verify its own work?",
+      "state": "A VST GUI rendered offscreen and compared in CI, Claude Code operating OBS to check plugins, and an audio marker check of HLS drops in five minutes. The most documented practice, across six articles."
+    }
+  ],
+  "groups": [
+    {
+      "id": "product",
+      "title": "Products",
+      "note": "Maintained."
+    },
+    {
+      "id": "experiment",
+      "title": "Experiments in progress",
+      "note": "Open questions."
+    },
+    {
+      "id": "ended",
+      "title": "Ended experiments",
+      "note": "Finished or replaced."
+    }
+  ],
+  "items": [
+    {
+      "slug": "soko-kun",
+      "name": "Plugin Soko-kun",
+      "group": "product",
+      "questions": [
+        "agent-first",
+        "lightweight",
+        "conventions"
+      ],
+      "summary": "An MCP-first registry where people and AI agents search for and submit OBS Studio plugins.",
+      "what": "An open registry of third-party OBS Studio plugins. It links to files that authors publish on GitHub Releases. Registration goes through MCP.",
+      "why": "Plugins are scattered across GitHub and forums. Users and AI agents cannot easily find them or confirm that a download is the file the author published.",
+      "forWhom": "Plugin authors who build with AI agents, and OBS Studio users who look for plugins.",
+      "learned": [
+        "One stray sentence made an AI agent plan to wait over 6 hours: checkAgainAfter gave the latest possible time.",
+        "A check that could not read, parse or list a target must not pass it. It records undetermined or error."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-27",
+      "release": "v0.3.7 (2026-11-23)",
+      "note": "Free to use. MIT license.",
+      "links": [
+        {
+          "label": "Site",
+          "url": "https://soko-kun.allegromoltov.jp/"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/plugin-soko-kun"
+        },
+        {
+          "label": "MCP endpoint",
+          "url": "https://soko-kun.allegromoltov.jp/mcp"
+        }
+      ],
+      "articles": [
+        {
+          "title": "Build & Publish OBS Plugins with AI — Plugin Soko-kun",
+          "lang": "en",
+          "where": "Medium",
+          "date": "2026-11-23",
+          "url": "https://allegromoltov.medium.com/build-publish-obs-plugins-with-ai-plugin-soko-kun-ede9c92b7589",
+          "desc": "How Claude Code plans, builds, tests and lists an OBS plugin."
+        },
+        {
+          "title": "Plugin Soko-kun, a catalog where you can find and list OBS Studio plugins together with AI",
+          "lang": "en",
+          "where": "Medium",
+          "date": "2026-11-12",
+          "url": "https://allegromoltov.medium.com/plugin-soko-kun-a-catalog-where-you-can-find-and-list-obs-studio-plugins-together-with-ai-12ee2f25cdb7",
+          "desc": "Introduces the catalog, MCP-only registration and malware checks."
+        },
+        {
+          "title": "サービスの窓口を思い切って MCP だけにしたら GUI が意外といらないことに気づいた",
+          "lang": "ja",
+          "where": "Qiita",
+          "date": "2026-11-18",
+          "url": "https://qiita.com/AllegroMoltoV/items/30e7806166e771ee45bb",
+          "desc": "Why submissions go through MCP only."
+        },
+        {
+          "title": "Hono の JSX と古風なデザインで JavaScript を送らない爆速カタログサイトを作った",
+          "lang": "ja",
+          "where": "Qiita",
+          "date": "2026-11-10",
+          "url": "https://qiita.com/AllegroMoltoV/items/d9ec82346a035b32285f",
+          "desc": "How the site was kept light."
+        }
+      ]
+    },
+    {
+      "slug": "audio-soko-kun",
+      "name": "Audio Plugin Soko-kun",
+      "group": "product",
+      "questions": [
+        "agent-first",
+        "sustainable",
+        "conventions"
+      ],
+      "summary": "An MCP-first registry of open-source audio plugins in VST 3, CLAP, LV2 and Audio Unit formats.",
+      "what": "A sibling of Plugin Soko-kun for DAW plugins. It hosts no files. It links to authors' GitHub Releases that pass the listed checks.",
+      "why": "The registry mechanism was wanted for audio plugins too. The decision record cites repeated reports of malware disguised as cracked audio plugins.",
+      "forWhom": "Authors of open-source audio plugins, and people who look for free plugins for their DAW.",
+      "learned": [
+        "Separate copies meant fixing the same defect twice, again and again. The shared base is now kept identical, fixed in Plugin Soko-kun first."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-27",
+      "release": "none (runs as a site)",
+      "note": "Free to use. MIT license.",
+      "links": [
+        {
+          "label": "Site",
+          "url": "https://audio-soko-kun.allegromoltov.jp/"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/audio-plugin-soko-kun"
+        },
+        {
+          "label": "MCP endpoint",
+          "url": "https://audio-soko-kun.allegromoltov.jp/mcp"
+        }
+      ],
+      "articles": []
+    },
+    {
+      "slug": "simple-pitch-shift",
+      "name": "Simple Pitch Shift",
+      "group": "product",
+      "questions": [
+        "simplicity",
+        "verifiable"
+      ],
+      "summary": "An OBS Studio audio filter that changes voice pitch and formant in real time.",
+      "what": "A filter with sliders for pitch (-12.0 to +12.0 semitones), formant and gain. It keeps the original voice character with Signalsmith Stretch.",
+      "why": "The author chose it as a subject for building an OBS plugin, and as a fairly heavy piece of audio processing to try.",
+      "forWhom": "Streamers who change their speaking or singing voice in OBS Studio.",
+      "learned": [
+        "The author rated 10 ms and 20 ms windows below product quality, so the options became 20, 30 and 40 ms (default 40 ms).",
+        "Single-tone frequency error was not used alone as the quality criterion. Representative speech and the author's listening decided adoption."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-14",
+      "release": "v1.1.3 (2026-11-14)",
+      "note": "GPL-2.0. Checked on real hardware only with Windows 11 and OBS Studio 33.0.1.",
+      "links": [
+        {
+          "label": "Listing",
+          "url": "https://soko-kun.allegromoltov.jp/plugins/allegromoltov/simple-pitchshift?lang=en"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/simple-pitchshift"
+        }
+      ],
+      "articles": [
+        {
+          "title": "How I improved Simple Pitch Shift, my real-time voice pitch filter for OBS Studio",
+          "lang": "en",
+          "where": "Medium",
+          "date": "2026-11-14",
+          "url": "https://allegromoltov.medium.com/how-i-improved-simple-pitch-shift-my-real-time-voice-pitch-filter-for-obs-studio-f5d7248ba226",
+          "desc": "Announces v1.1.0: window, formant and gain settings."
+        },
+        {
+          "title": "OBS のピッチシフトプラグインを改善した話",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-11-08",
+          "url": "https://note.com/allegromoltov/n/nf5301c73f1d1",
+          "desc": "Window length trade-off and the author's listening evaluation."
+        }
+      ]
+    },
+    {
+      "slug": "loudness-balance-monitor",
+      "name": "Loudness Balance Monitor",
+      "group": "product",
+      "questions": [
+        "simplicity",
+        "verifiable"
+      ],
+      "summary": "An OBS Studio dock that rates the loudness balance of voice and BGM in three colors.",
+      "what": "A realtime monitor shows loudness and peak level for the selected voice and BGM sources. A recording monitor records the final mix for up to 30 seconds and plays it back.",
+      "why": "To judge before streaming whether the voice is easy to hear and clipping is likely, and to review the OBS volume settings.",
+      "forWhom": "Streamers who mix a voice with BGM in OBS Studio.",
+      "learned": [
+        "Recording and playback are separate. A finished recording plays for a limited time, which avoids feeding the playback sound back into the same recording.",
+        "A prototype failed and the threshold stayed unchanged. The fault was counting a source OBS had not used in the output as missing."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-14",
+      "release": "v1.0.5 (2026-11-14)",
+      "note": "GPL-2.0. The Windows x64 zip is the tested distribution.",
+      "links": [
+        {
+          "label": "Listing",
+          "url": "https://soko-kun.allegromoltov.jp/plugins/allegromoltov/loudness-balance-monitor?lang=en"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/loudness-balance-monitor"
+        }
+      ],
+      "articles": [
+        {
+          "title": "Loudness Balance Monitor: an OBS Studio plugin that tells you in three colors whether your voice and BGM are balanced",
+          "lang": "en",
+          "where": "Medium",
+          "date": "2026-11-13",
+          "url": "https://allegromoltov.medium.com/loudness-balance-monitor-an-obs-studio-plugin-that-tells-you-in-three-colors-7a67c26d5f78",
+          "desc": "Introduces the three-color rating and the recorded monitor."
+        },
+        {
+          "title": "OBS の音量バランスモニタプラグインを v1.0.2 にした",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-11-07",
+          "url": "https://note.com/allegromoltov/n/na0467c31f0a0",
+          "desc": "Introduces the recording monitor."
+        }
+      ]
+    },
+    {
+      "slug": "simple-drop-shadow",
+      "name": "Simple Drop Shadow",
+      "group": "product",
+      "questions": [
+        "lightweight",
+        "verifiable"
+      ],
+      "summary": "An OBS Studio video filter that adds a blurred drop shadow at low GPU cost.",
+      "what": "A video filter with X and Y offset, blur radius up to 1024, color and opacity. The shadow extends beyond the source.",
+      "why": "The author found no free plugin that only adds a drop shadow. A closer search later showed that some exist.",
+      "forWhom": "OBS Studio users who add shadows to video sources.",
+      "learned": [
+        "At blur radius 1024 and 1080p, GPU time went from 36.428 ms for a box blur to around 1 ms in the released filter (RTX 3060 Ti, as stated in the README).",
+        "A C-style cast compiled in HLSL but not in OpenGL, so D3D11-only checks missed it. Version 0.1.2 and earlier may not have drawn shadows on macOS or Linux."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-15",
+      "release": "v1.0.4 (2026-11-15)",
+      "note": "GPL-2.0. Checked on real hardware only with Windows and OBS Studio 33.0.1.",
+      "links": [
+        {
+          "label": "Listing",
+          "url": "https://soko-kun.allegromoltov.jp/plugins/allegromoltov/simple-drop-shadow?lang=en"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/simple-drop-shadow"
+        }
+      ],
+      "articles": [
+        {
+          "title": "OBS プラグインの動作確認は Claude Code に OBS を操作させている",
+          "lang": "ja",
+          "where": "Qiita",
+          "date": "2026-11-12",
+          "url": "https://qiita.com/AllegroMoltoV/items/37646e926b7746f95172",
+          "desc": "How Claude Code operates OBS to check plugins. Names this plugin among the examples."
+        }
+      ]
+    },
+    {
+      "slug": "realtime-translate-summary",
+      "name": "Realtime Translate & Summary",
+      "group": "product",
+      "questions": [
+        "simplicity",
+        "verifiable"
+      ],
+      "summary": "An OBS Studio plugin that turns Japanese speech into live captions, English captions and a short summary.",
+      "what": "A dock plugin that fills OBS text sources with Japanese captions, English captions and a Japanese summary of the last 5 minutes, up to 3 lines. It uses the user's own OpenAI API key. Windows x64 only.",
+      "why": "It rebuilds the author's Python tool as a native plugin. The Python tool needed a runtime, a .env file, OBS WebSocket setup and named text sources.",
+      "forWhom": "Japanese-speaking streamers who use OBS Studio and want live Japanese captions, English captions and a summary.",
+      "learned": [
+        "No compared model met every condition: one exceeded the line limit on 57 summary lines, and another wrote text that the speech did not contain.",
+        "At reasoning effort low, 25 of 53 summary calls failed for one model and 21 of 53 for another, with empty bodies."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-19",
+      "release": "v1.0.4 (2026-11-19)",
+      "note": "GPL-2.0. Windows x64 only. Replaces the ended Realtime Summary Generator.",
+      "links": [
+        {
+          "label": "Listing",
+          "url": "https://soko-kun.allegromoltov.jp/plugins/allegromoltov/realtime-translate-summary?lang=en"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/realtime-translate-summary"
+        },
+        {
+          "label": "Ended predecessor",
+          "url": "https://github.com/AllegroMoltoV/realtime-summary-generator"
+        }
+      ],
+      "articles": [
+        {
+          "title": "OBS 配信にリアルタイム字幕・英訳・「今北産業」機能を追加した",
+          "lang": "ja",
+          "where": "Qiita",
+          "date": "2026-09-15",
+          "url": "https://qiita.com/AllegroMoltoV/items/2c92e0fdf6a30191713a",
+          "desc": "Describes the Python predecessor. An update note mentions the plugin version."
+        }
+      ]
+    },
+    {
+      "slug": "ai-assistant-for-obs",
+      "name": "AI Assistant for OBS Studio",
+      "group": "product",
+      "questions": [
+        "simplicity",
+        "verifiable"
+      ],
+      "summary": "An OBS Studio dock plugin where users ask an AI assistant to diagnose streaming problems and apply approved fixes.",
+      "what": "A chat dock that reads OBS state and the last 300 log lines, searches the web and explains causes. Settings changes and added filters or sources apply only after approval. It uses the user's own OpenAI API key.",
+      "why": "Streamers often cannot put the cause of problems such as nothing showing up or no sound into words. The plugin helps them reach the cause through conversation.",
+      "forWhom": "Streamers who hit OBS problems and cannot describe the cause.",
+      "learned": [
+        "At low reasoning effort, one model explained all 7 test scenarios correctly, like medium effort, with a median response about 1.3 seconds shorter (4,150 ms against 5,493 ms).",
+        "The web search tool alone added 4,436 input tokens to every request. Search-related costs were 63% to 79% of cost in the three configurations that searched."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-19",
+      "release": "v1.0.5 (2026-11-19)",
+      "note": "GPL-2.0. Windows x64 only.",
+      "links": [
+        {
+          "label": "Listing",
+          "url": "https://soko-kun.allegromoltov.jp/plugins/allegromoltov/ai-assistant-for-obs?lang=en"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/ai-assistant-for-obs"
+        }
+      ],
+      "articles": [
+        {
+          "title": "\"AI Assistant\", an OBS Studio plugin that lets you ask an AI about streaming problems in a dock",
+          "lang": "en",
+          "where": "Medium",
+          "date": "2026-11-12",
+          "url": "https://allegromoltov.medium.com/ai-assistant-an-obs-studio-plugin-that-lets-you-ask-an-ai-about-streaming-problems-in-a-dock-df675fdd0c2a",
+          "desc": "English introduction of the plugin."
+        },
+        {
+          "title": "配信のトラブルを OBS のドックで AI に相談できるプラグイン「AIアシスタント」を作った",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-11-12",
+          "url": "https://note.com/allegromoltov/n/nd43e81bb2fa2",
+          "desc": "Explains the idea and the dock design."
+        }
+      ]
+    },
+    {
+      "slug": "my-claude-code-rules",
+      "name": "my-claude-code-rules",
+      "group": "product",
+      "questions": [
+        "verifiable",
+        "sustainable"
+      ],
+      "summary": "A public rule set and setup scripts that guide how Claude Code works across many sessions.",
+      "what": "Five rule files cover project management, testing, writing style, working principles and Beads task records. The repository also holds three skills and setup scripts. Two hook scripts block specific shell patterns and flag Markdown style errors.",
+      "why": "Claude Code re-injects only CLAUDE.md and .claude/rules/ after context compaction. Rules must live there to survive compaction.",
+      "forWhom": "Developers who run Claude Code over many sessions and want their working rules kept in a versioned repository.",
+      "learned": [
+        "A Stop hook cannot force a record. It only reminds the agent. Hooks block only rules that a lexical check can decide.",
+        "The author cut rules because written rules still went unfollowed, and adding text made the rule set itself larger."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-18",
+      "release": "v2.28.0 (2026-11-18)",
+      "note": "",
+      "links": [
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/my-claude-code-rules"
+        },
+        {
+          "label": "Releases",
+          "url": "https://github.com/AllegroMoltoV/my-claude-code-rules/releases"
+        }
+      ],
+      "articles": [
+        {
+          "title": "Claude Code のルールを増やしてきたけど今度は減らすことにした",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-10-28",
+          "url": "https://note.com/allegromoltov/n/na9b1321bd32d",
+          "desc": "Moves checks that need no judgment from rules to hooks."
+        },
+        {
+          "title": "Claude Code の計画レビューを「反証」に変えた",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-08-22",
+          "url": "https://note.com/allegromoltov/n/nbd200c585725",
+          "desc": "Replaces plan review with a refutation pass by a separate-context sub-agent."
+        },
+        {
+          "title": "Claude Code のルールから、プロジェクトによらない「仕事の進め方」を切り出した",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-07-12",
+          "url": "https://note.com/allegromoltov/n/n1284338eeadf",
+          "desc": "Splits project rules from general working principles."
+        }
+      ]
+    },
+    {
+      "slug": "team-habits",
+      "name": "Team Habits for Coding Agents",
+      "group": "product",
+      "questions": [
+        "verifiable",
+        "lightweight"
+      ],
+      "summary": "Seven on-demand skills that teach AI coding agents common team habits, such as decision records and independent review.",
+      "what": "Seven SKILL.md files, one per failure, such as a suggestion becoming a decision, stale notes and self-approved plans. The skills ask agents to read and write Markdown files in the repository. The pack has no scripts or hooks.",
+      "why": "Agents fail the way human teams do. Teams found fixes long ago, so the pack teaches agents those habits.",
+      "forWhom": "Developers and small teams who work with Claude Code, Codex or a similar agent in one repository across many sessions.",
+      "learned": [
+        "Agents load skills while they orient themselves, before the first edit, so situations that arise mid-task were often missed.",
+        "An agent told to work in another language translated and shortened the start-here table, and the reworded table was untested."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-02",
+      "release": "v1.3 (2026-11-02)",
+      "note": "",
+      "links": [
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/team-habits-for-coding-agents"
+        }
+      ],
+      "articles": [
+        {
+          "title": "Claude Code や Codex に「チームの習慣」を教えるスキルを Agensi で無料公開した話",
+          "lang": "ja",
+          "where": "note",
+          "date": "2026-11-01",
+          "url": "https://note.com/allegromoltov/n/n4aa197a49fbf",
+          "desc": "Explains why the author rebuilt personal rules as an English skill pack and listed it for free."
+        }
+      ]
+    },
+    {
+      "slug": "image-degradation",
+      "name": "Image Degradation",
+      "group": "product",
+      "questions": [
+        "simplicity",
+        "verifiable"
+      ],
+      "summary": "An OBS Studio video filter that degrades video like an image reposted and recompressed many times, using one slider.",
+      "what": "A GPU shader filter for sources and groups with one Degradation slider (0 to 100). It combines JPEG-like 8×8 blocks, blur, color shift, sharpening halos and boosted saturation. Windows and Ubuntu builds are published.",
+      "why": "Apps that degrade images as a joke are common, but the author found no example built as an OBS plugin.",
+      "forWhom": "OBS Studio users who want a degraded, over-compressed look on a source or group. The filter sends nothing over the network.",
+      "learned": [
+        "The author ran the render tests against a deliberately broken implementation. Five scenarios failed on both render backends."
+      ],
+      "state": "Maintained",
+      "updated": "2026-11-16",
+      "release": "v1.0.0 (2026-11-16)",
+      "note": "One release so far. No macOS build.",
+      "links": [
+        {
+          "label": "Listing",
+          "url": "https://soko-kun.allegromoltov.jp/plugins/allegromoltov/image-degradation?lang=en"
+        },
+        {
+          "label": "Source",
+          "url": "https://github.com/AllegroMoltoV/image-degradation"
+        }
+      ],
+      "articles": []
+    }
+  ],
+  "listOnly": [
+    {
+      "name": "SCoIM",
+      "url": "https://github.com/AllegroMoltoV/scoim",
+      "group": "experiment",
+      "questions": [
+        "verifiable",
+        "simplicity"
+      ],
+      "what": "A human and an LLM co-edit a music script that becomes MusicXML and SMF.",
+      "status": ""
+    },
+    {
+      "name": "OBS plugins in Rust",
+      "url": "https://github.com/AllegroMoltoV/obs-plugin-impl-using-rust",
+      "group": "ended",
+      "questions": [
+        "conventions"
+      ],
+      "what": "A feasibility check: a hand-written FFI port of a tint filter to Rust.",
+      "status": "Ended. The port ran in OBS as the original does. Last updated 2026-03-02 (v0.1.0). No successor."
+    },
+    {
+      "name": "Realtime Summary Generator",
+      "url": "https://github.com/AllegroMoltoV/realtime-summary-generator",
+      "group": "ended",
+      "questions": [
+        "agent-first"
+      ],
+      "what": "A Python tool for real-time summaries of streams.",
+      "status": "Ended. Replaced by Realtime Translate & Summary."
+    },
+    {
+      "name": "OBS Shindan-chan",
+      "group": "ended",
+      "questions": [
+        "simplicity"
+      ],
+      "what": "A diagnostic app for stream settings.",
+      "status": "Ended. Its diagnosis moved into a successor OBS plugin."
+    }
+  ]
+}

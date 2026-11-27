@@ -1,0 +1,23 @@
+{
+  "name": "a11v-dev",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "a11v lab (a11v.dev) の静的サイト。JS なし、1 リクエスト、1 ページ 10 KB 未満を目標にする。",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node src/build.mjs",
+    "build:release": "node src/build-release.mjs",
+    "release": "node src/build-release.mjs && node src/check.mjs && wrangler deploy",
+    "check": "node src/check.mjs",
+    "check:links": "node src/check-links.mjs",
+    "test": "node --test",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.168.0"
+  }
+}
