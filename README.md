@@ -25,6 +25,10 @@ a11v lab の Web サイト (https://a11v.dev) のソースです。a11v lab は�
 | `site/src/check-links.mjs` | 外部リンクの実在の確認。ネットワークに依存するため、検査とは分けている |
 | `site/test/` | 検査が、公開してはならない状態を検出できることのテスト |
 | `site/wrangler.jsonc` | Cloudflare Workers の静的アセットによる配信の設定 |
+| `docs/reference/zone-settings.md` | 目標を満たすために必要な、Cloudflare のゾーン設定 |
+| `docs/reference/known-constraints.md` | 既知の制約と、未確認の事項 |
+| `docs/how-to/verify-after-release.md` | 配備後の確認の手順 |
+| `docs/glossary.md` | 用語集 |
 
 ## 使い方
 
@@ -57,6 +61,7 @@ npm run dev          # ローカルで配信する
 
 * 窓口のメールアドレスを、リポジトリの外から読むようにした
 * LICENSE・NOTICE・Dependabot・CI を追加した
+* 運用ドキュメント (ゾーン設定、既知の制約、配備後の確認、用語集) を `docs/` に追加した
 
 ### v0.1.0
 
