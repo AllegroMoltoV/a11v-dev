@@ -1,7 +1,7 @@
 // a11v.dev の静的サイトを生成する。依存は Node の標準機能だけ。入力は data/site.json と assets/、src/style.css。出力は dist/。
 // 窓口のメールアドレスは、収集を避けるためリポジトリに置かない。環境変数 A11V_CONTACT か、git 管理外の data/contact.local.txt から読む。
 // SITE_INDEXABLE=1 のときだけ、検索エンジンへの登録を許す (noindex を付けず、robots.txt で許可する)。既定は非公開 (noindex)。
-import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, rmSync, existsSync, copyFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 
@@ -9,6 +9,11 @@ const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;");
 const escAttr = (s) => esc(s).replace(/"/g, "&quot;");
 const jsonLd = (obj) => JSON.stringify(obj).replace(/</g, "\\u003c");
+
+// 共有の画像 (og:image)、Organization の logo、Google の検索結果用のファビコン (トップだけが link で示す。ブラウザーは data URI のほうを選び、取得しない)。
+// dist へ、そのまま複写する。HTML からは、メタ情報・JSON-LD・link の URL でだけ参照する。
+export const STATIC_ASSETS = ["og.png", "logo.png", "favicon.ico"];
+export const OG_IMAGE = { path: "/og.png", width: 1200, height: 630 };
 
 const contactFile = join(root, "data/contact.local.txt");
 function readContact() {
@@ -40,12 +45,14 @@ export function build({ outDir = join(root, "dist"), indexable = process.env.SIT
     .join("");
   const css = readFileSync(join(root, "src/style.css"), "utf8").trim().replace("/*FILTERS*/", filters).replace("__COUNT__", String(rows.length));
 
-  const page = ({ title, description, canonical, body, anchors = "", ld, noindex }) => `<!doctype html>
+  const page = ({ title, description, canonical, body, anchors = "", ld, noindex, homeIcon = false }) => `<!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${escAttr(description)}">${noindex ? '<meta name="robots" content="noindex">' : ""}
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
 ${canonical ? `<link rel="canonical" href="${canonical}">\n<meta property="og:url" content="${canonical}">\n` : ""}<meta property="og:site_name" content="${data.name}"><meta property="og:title" content="${escAttr(title)}"><meta property="og:description" content="${escAttr(description)}"><meta property="og:type" content="website">
-<link rel="icon" href="${favUri}">
+${canonical ? `<meta property="og:image" content="${origin}${OG_IMAGE.path}"><meta property="og:image:width" content="${OG_IMAGE.width}"><meta property="og:image:height" content="${OG_IMAGE.height}"><meta property="og:image:alt" content="${data.name}"><meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="${origin}${OG_IMAGE.path}">
+` : ""}${homeIcon ? '<link rel="icon" href="/favicon.ico" sizes="48x48">' : ""}<link rel="icon" href="${favUri}">
 <style>${css}</style>${ld ? `<script type="application/ld+json">${jsonLd(ld)}</script>` : ""}</head><body><a class="sk" href="#main">Skip to content</a>${anchors}
 <main id="main">
 ${body}
@@ -87,8 +94,14 @@ ${x.articles.length ? `<h2>Articles</h2><ul>${x.articles.map((a) => `<li><a href
   const anchors = `\n${data.questions.map((q) => `<span class="x" id="f-${q.id}"></span>`).join("")}<span class="x" id="f-all"></span>`;
   const files = new Map();
   files.set("index.html", page({
-    title: data.name, description: `${data.tagline} ${data.intro}`, canonical: `${origin}/`, body: indexBody, anchors, noindex: !indexable,
-    ld: { "@context": "https://schema.org", "@type": "Organization", name: data.name, url: `${origin}/`, description: data.intro, sameAs: data.footer.links.map((l) => l.url) },
+    title: data.name, description: `${data.tagline} ${data.intro}`, canonical: `${origin}/`, body: indexBody, anchors, noindex: !indexable, homeIcon: true,
+    ld: {
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "Organization", name: data.name, url: `${origin}/`, logo: `${origin}/logo.png`, description: data.intro, sameAs: data.footer.links.map((l) => l.url) },
+        { "@type": "WebSite", name: data.name, alternateName: "a11v.dev", url: `${origin}/` },
+      ],
+    },
   }));
   for (const x of items) {
     const source = x.links.find((l) => l.label === "Source");
@@ -111,7 +124,8 @@ ${x.articles.length ? `<h2>Articles</h2><ul>${x.articles.map((a) => `<li><a href
   rmSync(outDir, { recursive: true, force: true });
   mkdirSync(outDir, { recursive: true });
   for (const [name, content] of files) writeFileSync(join(outDir, name), content);
-  return { outDir, files: [...files.keys()], indexable };
+  for (const name of STATIC_ASSETS) copyFileSync(join(root, "assets", name), join(outDir, name));
+  return { outDir, files: [...files.keys(), ...STATIC_ASSETS], indexable };
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

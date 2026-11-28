@@ -19,7 +19,7 @@ a11v lab の Web サイト (https://a11v.dev) のソースです。a11v lab は�
 | --- | --- |
 | `site/` | サイトのソースと、生成・検査の仕組み |
 | `site/data/site.json` | 掲載する内容。問い、成果、記事、リンク |
-| `site/assets/` | ロゴとファビコン |
+| `site/assets/` | ロゴ、ファビコン、共有の画像 (`og.png`)、Organization の logo (`logo.png`) |
 | `site/src/build.mjs` | `site/dist/` に、HTML・sitemap.xml・robots.txt・llms.txt・404.html を生成する |
 | `site/src/check.mjs` | 生成物の検査。サイズ、script、外部リソース、リンク、メタ情報、noindex、メールアドレスの書き方を確かめる |
 | `site/src/check-links.mjs` | 外部リンクの実在の確認。ネットワークに依存するため、検査とは分けている |
@@ -56,6 +56,14 @@ npm run dev          # ローカルで配信する
 コードは MIT です (`LICENSE`)。`site/data/site.json` の本文と、`site/assets/` のロゴ・ファビコンは、権利を留保します。詳細と第三者の出典は `NOTICE` にあります。
 
 ## 更新情報
+
+### v0.1.2
+
+* 共有の画像 (`og:image`、`twitter:card`) と、`og:locale` を全ページに追加した
+* トップの JSON-LD に、WebSite と Organization の logo を追加した
+* Google の検索結果用に、トップから `/favicon.ico` を示した。ブラウザーは SVG の data URI を選ぶため、リクエストは増えない
+* 検査とテストに、`og:image` の実在、PNG、幅、ファビコンの置き方を追加した
+* Cloudflare の Always Use HTTPS を必要な設定に追加した
 
 ### v0.1.1
 

@@ -2,7 +2,7 @@
 // 加えて、実際のビルド結果が検査を通ること (非公開と公開の両方)。正常な書き方の網羅は目的にしない。
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { randomBytes } from "node:crypto";
@@ -21,6 +21,7 @@ const page = (body = "<p>ok</p>", head = "") => `<!doctype html>
 <title>t</title><meta name="description" content="d"><meta name="robots" content="noindex">
 <meta name="theme-color" content="#fff" media="(prefers-color-scheme: light)"><meta name="theme-color" content="#000" media="(prefers-color-scheme: dark)">
 <link rel="canonical" href="https://a11v.example/"><meta property="og:title" content="t">
+<meta property="og:image" content="https://a11v.example/og.png"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" content="https://a11v.example/og.png">
 <link rel="icon" href="data:image/svg+xml,x">${head}</head><body><main id="main">${body}</main></body></html>`;
 
 const problems = (html, name = "index.html", c = ctx) => checkPage(name, html, c);
@@ -43,6 +44,12 @@ const bad = [
   ["存在しない id へのリンク", page('<a href="/#nope">x</a>'), "存在しない id"],
   ["email_off の外のメールアドレス", page("<p>allegromoltov@a11v.example</p>"), "email_off"],
   ["SVG のパスデータが壊れている", page('<svg><path d="M58.5 0.3Q57.9 0.3 57.50Q57.1-0.4 57.2-1.1"/></svg>'), "SVG"],
+  ["og:image がない", page().replace(/<meta property="og:image"[^>]*>/, ""), "og:image がない"],
+  ["og:image が別のサイトを指す", page().replace('https://a11v.example/og.png"><meta name="twitter:card"', 'https://other.example/og.png"><meta name="twitter:card"'), "og:image が、このサイトの絶対 URL ではない"],
+  ["twitter:card がない", page().replace(/<meta name="twitter:card"[^>]*>/, ""), "twitter:card"],
+  ["twitter:image が og:image と異なる", page().replace('<meta name="twitter:image" content="https://a11v.example/og.png">', '<meta name="twitter:image" content="https://a11v.example/x.png">'), "twitter:image が og:image と異なる"],
+  ["data URI のファビコンがない", page().replace(/<link rel="icon"[^>]*>/, '<link rel="icon" href="/favicon.ico" sizes="48x48">'), "data URI のファビコンがない"],
+  ["トップが別のファイルをファビコンにする", page("<p>ok</p>", '<link rel="icon" href="/other.png">'), "ファビコンが data URI ではない"],
   ["非公開なのに noindex がない", page().replace('<meta name="robots" content="noindex">', ""), "noindex"],
 ];
 for (const [name, html, expected] of bad) {
@@ -51,6 +58,13 @@ for (const [name, html, expected] of bad) {
     assert.ok(found.some((x) => x.includes(expected)), `想定の問題 (${expected}) が見つからない: ${JSON.stringify(found)}`);
   });
 }
+
+test("トップは、data URI に加えて /favicon.ico を示してよい。トップ以外は示せない", () => {
+  const withIco = page("<p>ok</p>", '<link rel="icon" href="/favicon.ico" sizes="48x48">');
+  assert.deepEqual(problems(withIco), []);
+  const other = problems(withIco, "plugin-a.html").filter((x) => !x.includes("canonical"));
+  assert.ok(other.some((x) => x.includes("ファビコンが data URI ではない")), JSON.stringify(other));
+});
 
 test("email_off で囲んだメールアドレスは、問題にしない", () => {
   assert.deepEqual(problems(page("<p><!--email_off-->allegromoltov@a11v.example<!--/email_off--></p>")), []);
@@ -67,5 +81,18 @@ test("実際のビルド結果が検査を通る (非公開と公開)", () => {
     } finally {
       rmSync(dir, { recursive: true, force: true });
     }
+  }
+});
+
+test("og:image が指すファイルがない、または PNG ではない場合は検出する", () => {
+  const dir = mkdtempSync(join(tmpdir(), "a11v-site-"));
+  try {
+    build({ outDir: dir, indexable: true, contact: "contact@a11v.example" });
+    rmSync(join(dir, "og.png"));
+    assert.ok(checkSite(dir).problems.some((x) => x.includes("og:image が指すファイルがない")));
+    writeFileSync(join(dir, "og.png"), "not a png at all, just text");
+    assert.ok(checkSite(dir).problems.some((x) => x.includes("PNG ではない")));
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
   }
 });

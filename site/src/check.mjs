@@ -53,8 +53,12 @@ export function checkPage(name, html, ctx) {
     const rel = (tag.match(/rel\s*=\s*["']([^"']+)["']/i) || [])[1] || "";
     const href = (tag.match(/href\s*=\s*["']([^"']*)["']/i) || [])[1] || "";
     if (/(stylesheet|preload|prefetch|modulepreload|manifest|apple-touch-icon)/i.test(rel)) add(`外部のリソースを参照する link がある (${rel})`);
-    if (/\bicon\b/i.test(rel) && !href.startsWith("data:")) add("ファビコンが data URI ではない");
+    if (/\bicon\b/i.test(rel) && !href.startsWith("data:")) {
+      // 例外: トップだけが、Google の検索結果用に /favicon.ico を示してよい (ブラウザーは data URI のほうを選ぶ)
+      if (!(name === "index.html" && href === "/favicon.ico")) add("ファビコンが data URI ではない");
+    }
   }
+  if (!/<link rel="icon" href="data:/.test(html)) add("data URI のファビコンがない");
   if (/@import|url\(\s*["']?(?!data:)/i.test(html)) add("CSS が外部のリソースを参照している");
 
   // リンク
@@ -76,6 +80,16 @@ export function checkPage(name, html, ctx) {
   if (!/<meta name="viewport" content="[^"]+"/.test(html)) add("meta viewport がない");
   if ((html.match(/<meta name="theme-color"/g) || []).length < 2) add("theme-color がライトとダークの 2 つない");
   if (!/<meta property="og:title" content="[^"]+"/.test(html)) add("og:title がない");
+  // 共有のメタ情報 (404 を除く)。og:image は絶対 URL で、このサイトの画像を指す。実在は checkSite で確認する
+  if (name !== "404.html") {
+    const ogImage = (html.match(/<meta property="og:image" content="([^"]+)"/) || [])[1];
+    if (!ogImage) add("og:image がない");
+    else if (!ogImage.startsWith(`${ctx.origin}/`)) add(`og:image が、このサイトの絶対 URL ではない: ${ogImage}`);
+    if (!/<meta name="twitter:card" content="summary_large_image"/.test(html)) add("twitter:card (summary_large_image) がない");
+    const twImage = (html.match(/<meta name="twitter:image" content="([^"]+)"/) || [])[1];
+    if (!twImage) add("twitter:image がない");
+    else if (twImage !== ogImage) add("twitter:image が og:image と異なる");
+  }
   const canonical = (html.match(/<link rel="canonical" href="([^"]+)"/) || [])[1];
   if (name === "404.html") { if (canonical) add("404 に canonical がある"); }
   else if (canonical !== `${ctx.origin}${pagePath === "/" ? "/" : pagePath}`) add(`canonical が想定と異なる: ${canonical}`);
@@ -122,6 +136,31 @@ export function checkSite(distDir) {
     problems.push(...checkPage(n, html, ctx));
     sizes.push([n, Buffer.byteLength(html), brSize(html)]);
   }
+  // og:image が指すファイルは、dist にあり、PNG で、幅 1200 px 以上であること (なければ、共有の表示が壊れる)
+  const ogFiles = new Set();
+  for (const [n, html] of pages) {
+    const u = (html.match(/<meta property="og:image" content="([^"]+)"/) || [])[1];
+    if (u && n !== "404.html") ogFiles.add(u.slice(origin.length));
+  }
+  for (const f of ogFiles) {
+    const file = join(distDir, f);
+    if (!existsSync(file)) { problems.push(`og:image が指すファイルがない: ${f}`); continue; }
+    const buf = readFileSync(file);
+    if (buf.length < 24 || buf.readUInt32BE(0) !== 0x89504e47) problems.push(`og:image が PNG ではない: ${f}`);
+    else if (buf.readUInt32BE(16) < 1200) problems.push(`og:image の幅が 1200 px 未満: ${f} (${buf.readUInt32BE(16)} px)`);
+  }
+  // 検索結果用のファビコンは、dist にあり、ICO 形式であること
+  const ico = join(distDir, "favicon.ico");
+  if (!existsSync(ico)) problems.push("favicon.ico がない");
+  else {
+    const h = readFileSync(ico);
+    if (h.length < 22 || h.readUInt16LE(0) !== 0 || h.readUInt16LE(2) !== 1) problems.push("favicon.ico が ICO 形式ではない");
+  }
+  // Organization の logo は、dist にあること
+  const home = pages.get("index.html") || "";
+  const logoUrl = (home.match(/"logo":"([^"]+)"/) || [])[1];
+  if (logoUrl && !existsSync(join(distDir, logoUrl.slice(origin.length)))) problems.push(`JSON-LD の logo が指すファイルがない: ${logoUrl}`);
+
   // sitemap は、404 を除く全ページを、絶対 URL で載せる
   const sitemap = readFileSync(join(distDir, "sitemap.xml"), "utf8");
   for (const n of htmlNames.filter((x) => x !== "404.html")) {

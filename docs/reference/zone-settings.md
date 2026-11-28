@@ -11,6 +11,7 @@ a11v.dev が、実行される JavaScript 0 件、リクエスト 1 件、圧縮
 | 3 | 同上 | Rocket Loader | オフ | Cloudflare の公式の資料が、弱い ETag が除かれる要因として挙げている機能。有効だと、圧縮と 304 の両立が崩れるおそれがある |
 | 4 | 同上 | Automatic HTTPS Rewrites | オフ | Cloudflare の公式の資料が、弱い ETag が除かれる要因として挙げている機能。有効だと、圧縮と 304 の両立が崩れるおそれがある |
 | 5 | ゾーン全体。Security > Settings、または Scrape Shield | Replace insecure JavaScript libraries | オフ | Cloudflare の公式の資料が、弱い ETag が除かれる要因として挙げている機能。有効だと、圧縮と 304 の両立が崩れるおそれがある |
+| 6 | ゾーン全体。SSL/TLS > Edge Certificates | Always Use HTTPS | オン | http の要求が https へ転送されず、http と https の 2 つの URL が同じ内容で応答する |
 
 番号 2 から 5 は、HTML を書き換える機能です。a11v.dev の応答で、圧縮と 304 が両立した状態は、これら 4 つを無効にしたあとに得られました。4 つのうち、ETag を除いていた設定は、個別に切り分けていません。
 
